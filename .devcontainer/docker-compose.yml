@@ -1,0 +1,25 @@
+version: '3.1'
+
+services:
+  ubuntu-dev:
+    build:
+      context: .
+      dockerfile: ubuntu/Dockerfile
+    user: ${CURRENT_UID}
+    volumes:
+      - ~/.ssh:/root/.ssh
+      - ~/.git:/root/.git
+      - ../:/root/workspace
+    ports:
+      - 1234:1234
+    command: tail -f /dev/null
+
+  couch-db:
+    image: couchdb
+    volumes:
+      - ./.cache/couchdb/etc:/opt/couchdb/etc/local.d
+    environment:
+      COUCHDB_USER: admin
+      COUCHDB_PASSWORD: admin
+    ports:
+      - 5984:5984
